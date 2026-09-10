@@ -316,7 +316,8 @@ $(function () {
     $('#d-countries').text((movie.countriesOfOrigin || []).join(', ') || 'N/A');
     $('#d-budget').text(movie.budget ? formatMoney(movie.budget) : 'N/A');
     $('#d-gross').text(movie.grossWorldwide ? formatMoney(movie.grossWorldwide) : 'N/A');
-    $('#d-companies').text((movie.productionCompanies || []).join(', ') || 'N/A');
+    const companies = (movie.productionCompanies || []).map(c => typeof c === 'object' ? c.name : c);
+    $('#d-companies').text(companies.join(', ') || 'N/A');
 
     $('#d-links').empty();
     (movie.externalLinks || []).forEach(link => {
