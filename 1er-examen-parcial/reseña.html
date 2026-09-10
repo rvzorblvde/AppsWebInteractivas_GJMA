@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MovieReviews - Reseña</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-mr">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+      <i class="bi bi-film"></i>
+      <span>Movie<span class="brand-accent">Reviews</span></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mrNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mrNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html"><i class="bi bi-house-door me-1"></i>Inicio</a>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link btn btn-link" id="btnFavoritos" type="button">
+            <i class="bi bi-heart me-1"></i>Favoritos
+            <span class="badge rounded-pill bg-danger" id="favCount">0</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-5">
+
+  <div id="loadingSpinner" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status" style="width:3rem;height:3rem;">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="text-muted mt-3">Cargando reseña...</p>
+  </div>
+
+  <div id="errorState" class="text-center py-5">
+    <i class="bi bi-exclamation-triangle text-danger" style="font-size:2.5rem;"></i>
+    <p class="mt-3 mb-3 text-muted" id="errorMsg">No se encontró la película solicitada.</p>
+    <a href="index.html" class="btn btn-outline-secondary me-2"><i class="bi bi-arrow-left me-1"></i>Volver</a>
+    <button class="btn btn-primary" id="btnRetry"><i class="bi bi-arrow-clockwise me-1"></i>Reintentar</button>
+  </div>
+
+  <div id="movieDetail" style="display:none;">
+    <a href="index.html" class="btn btn-outline-secondary btn-sm mb-4"><i class="bi bi-arrow-left me-1"></i>Volver</a>
+
+    <div class="detail-card">
+      <div class="row g-4">
+        <div class="col-12 col-md-4 poster-col">
+          <img id="d-image" src="" alt="">
+        </div>
+        <div class="col-12 col-md-8">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <h1 id="d-title" class="mb-1"></h1>
+            <button class="btn btn-outline-danger fav-btn-detail" id="btnFavDetail" type="button">
+              <i class="bi bi-heart me-1"></i><span>Favorito</span>
+            </button>
+          </div>
+
+          <div class="d-flex flex-wrap gap-3 text-muted mb-3">
+            <span><i class="bi bi-calendar3 me-1"></i><span id="d-year"></span></span>
+            <span><i class="bi bi-clock me-1"></i><span id="d-runtime"></span> minutos</span>
+            <span><i class="bi bi-bookmark me-1"></i><span id="d-content-rating"></span></span>
+          </div>
+
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <span class="rating-big text-warning" id="d-rating"></span>
+            <div>
+              <div class="stars-lg" id="d-stars"></div>
+              <div class="text-muted small" id="d-votes"></div>
+            </div>
+            <div id="d-metascore-wrap" class="ms-auto text-center" style="display:none;">
+              <div class="metascore-badge" id="d-metascore"></div>
+              <div class="small text-muted mt-1">Metascore</div>
+            </div>
+          </div>
+
+          <div class="mb-3" id="d-genres"></div>
+
+          <p class="mb-4" id="d-description"></p>
+
+          <div class="mb-4" id="d-interests-wrap">
+            <div class="info-label mb-2">Intereses</div>
+            <div id="d-interests"></div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+              <div class="info-label">Idiomas</div>
+              <div class="info-value" id="d-languages"></div>
+            </div>
+            <div class="col-6 col-lg-3">
+              <div class="info-label">Países</div>
+              <div class="info-value" id="d-countries"></div>
+            </div>
+            <div class="col-6 col-lg-3">
+              <div class="info-label">Presupuesto</div>
+              <div class="info-value" id="d-budget"></div>
+            </div>
+            <div class="col-6 col-lg-3">
+              <div class="info-label">Recaudación</div>
+              <div class="info-value" id="d-gross"></div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="info-label mb-1">Productoras</div>
+            <div class="info-value" id="d-companies"></div>
+          </div>
+
+          <div class="d-flex flex-wrap align-items-center gap-2">
+            <a href="#" target="_blank" class="btn btn-danger" id="d-trailer"><i class="bi bi-play-fill me-1"></i>Ver tráiler</a>
+            <div id="d-links"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!--modal favoritos-->
+<div class="modal fade" id="favoritosModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-heart-fill text-danger me-2"></i>Mis Favoritos
+          <span class="badge rounded-pill bg-danger ms-1" id="favCountModal">0</span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="favEmptyMsg" class="text-center py-4" style="display:none;">
+          <i class="bi bi-heart" style="font-size:2.5rem;color:#ccc;"></i>
+          <p class="mt-3 mb-0">No tienes películas favoritas</p>
+          <p class="text-muted small">Agrega algunas desde la página de inicio</p>
+        </div>
+        <div class="row g-3" id="favoritosGrid"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" id="btnEliminarTodos"><i class="bi bi-trash me-1"></i>Eliminar todos</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<template id="favCardTemplate">
+  <div class="col-6 col-md-4 fav-col">
+    <div class="fav-mini-card" style="border-radius:10px;overflow:hidden;border:1px solid #eee;">
+      <img src="" alt="" style="width:100%;height:150px;object-fit:cover;">
+      <div class="p-2">
+        <div class="fw-bold small fav-title text-truncate"></div>
+        <div class="d-flex justify-content-between align-items-center small mb-2">
+          <span class="text-muted fav-year"></span>
+          <span class="text-warning fav-rating fw-bold"></span>
+        </div>
+        <div class="d-flex gap-1">
+          <a href="#" class="btn btn-sm btn-primary flex-grow-1 fav-ver">Ver</a>
+          <button class="btn btn-sm btn-outline-danger fav-remove" type="button"><i class="bi bi-x"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(function () {
+
+  const API_BASE = "https://api.imdbapi.dev/titles";
+  const FALLBACK_JSON = "PELICULAS.json";
+  const FAV_KEY = "movieReviewsFavorites";
+
+  const params = new URLSearchParams(window.location.search);
+  const movieId = params.get('id');
+
+  /* mismos favoritos */
+  function getFavorites() {
+    try { return JSON.parse(localStorage.getItem(FAV_KEY)) || []; }
+    catch (e) { return []; }
+  }
+  function saveFavorites(favs) { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); }
+  function isFavorite(id) { return getFavorites().some(f => f.id === id); }
+  function updateFavCount() {
+    $('#favCount, #favCountModal').text(getFavorites().length);
+  }
+  function toggleFavorite(movie) {
+    let favs = getFavorites();
+    if (favs.some(f => f.id === movie.id)) {
+      favs = favs.filter(f => f.id !== movie.id);
+    } else {
+      favs.push({
+        id: movie.id,
+        primaryTitle: movie.primaryTitle,
+        primaryImage: movie.primaryImage,
+        startYear: movie.startYear,
+        averageRating: movie.averageRating
+      });
+    }
+    saveFavorites(favs);
+    updateFavCount();
+  }
+  function removeFavorite(id) {
+    saveFavorites(getFavorites().filter(f => f.id !== id));
+    updateFavCount();
+    renderFavoritosModal();
+    if (currentMovie && currentMovie.id === id) setFavButtonState(false);
+  }
+
+  function renderFavoritosModal() {
+    const favs = getFavorites();
+    const $grid = $('#favoritosGrid').empty();
+    const tplNode = $('#favCardTemplate')[0].content;
+
+    if (favs.length === 0) { $('#favEmptyMsg').show(); return; }
+    $('#favEmptyMsg').hide();
+
+    favs.forEach(movie => {
+      const $card = $(document.importNode(tplNode, true));
+      $card.find('img').attr('src', movie.primaryImage || `https://placehold.co/300x200/222/fff?text=${encodeURIComponent(movie.primaryTitle)}`);
+      $card.find('.fav-title').text(movie.primaryTitle);
+      $card.find('.fav-year').text(movie.startYear || 'N/A');
+      $card.find('.fav-rating').html(`${(movie.averageRating ?? 0).toFixed(1)} <i class="bi bi-star-fill"></i>`);
+      $card.find('.fav-ver').attr('href', `reseña.html?id=${encodeURIComponent(movie.id)}`);
+      $card.find('.fav-remove').on('click', function () { removeFavorite(movie.id); });
+      $grid.append($card);
+    });
+  }
+
+  $('#btnFavoritos').on('click', function () {
+    renderFavoritosModal();
+    new bootstrap.Modal('#favoritosModal').show();
+  });
+  $('#btnEliminarTodos').on('click', function () {
+    saveFavorites([]);
+    updateFavCount();
+    renderFavoritosModal();
+    setFavButtonState(false);
+  });
+
+  /* metadatos pelicula */
+  let currentMovie = null;
+
+  function setFavButtonState(isFav) {
+    const $btn = $('#btnFavDetail');
+    $btn.toggleClass('is-fav', isFav);
+    $btn.find('span').text(isFav ? 'En Favoritos' : 'Favorito');
+    $btn.find('i').toggleClass('bi-heart', !isFav).toggleClass('bi-heart-fill', isFav);
+  }
+
+  function starsHtml(rating) {
+    const stars = Math.round((rating || 0) / 2);
+    let html = '';
+    for (let i = 1; i <= 5; i++) html += `<i class="bi ${i <= stars ? 'bi-star-fill' : 'bi-star'}"></i>`;
+    return html;
+  }
+
+  function formatMoney(n) {
+    if (n === null || n === undefined) return 'N/A';
+    if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return '$' + (n / 1000).toFixed(0) + 'K';
+    return '$' + n;
+  }
+
+  function renderMovie(movie) {
+    currentMovie = movie;
+
+    $('#d-image').attr('src', movie.primaryImage || `https://placehold.co/400x600/222/fff?text=${encodeURIComponent(movie.primaryTitle)}`);
+    $('#d-title').text(movie.primaryTitle);
+    $('#d-year').text(movie.startYear || 'N/A');
+    $('#d-runtime').text(movie.runtimeMinutes || 'N/A');
+    $('#d-content-rating').text(movie.contentRating || 'N/A');
+
+    $('#d-rating').text((movie.averageRating ?? 0).toFixed(1));
+    $('#d-stars').html(starsHtml(movie.averageRating));
+    $('#d-votes').text(movie.numVotes ? `(${movie.numVotes.toLocaleString('es-ES')} votos)` : '');
+
+    if (movie.metascore) {
+      const cls = movie.metascore >= 70 ? 'meta-green' : (movie.metascore >= 50 ? 'meta-yellow' : 'meta-red');
+      $('#d-metascore').removeClass('meta-green meta-yellow meta-red').addClass(cls).text(movie.metascore);
+      $('#d-metascore-wrap').show();
+    } else {
+      $('#d-metascore-wrap').hide();
+    }
+
+    $('#d-genres').empty();
+    (movie.genres || []).forEach(g => {
+      $('#d-genres').append(`<span class="badge-genre me-1">${g}</span>`);
+    });
+
+    $('#d-description').text(movie.description || 'Sin sinopsis disponible.');
+
+    $('#d-interests').empty();
+    if (movie.interests && movie.interests.length) {
+      movie.interests.forEach(i => $('#d-interests').append(`<span class="badge-interest me-1 mb-1 d-inline-block">${i}</span>`));
+      $('#d-interests-wrap').show();
+    } else {
+      $('#d-interests-wrap').hide();
+    }
+
+    $('#d-languages').text((movie.spokenLanguages || []).join(', ') || 'N/A');
+    $('#d-countries').text((movie.countriesOfOrigin || []).join(', ') || 'N/A');
+    $('#d-budget').text(movie.budget ? formatMoney(movie.budget) : 'N/A');
+    $('#d-gross').text(movie.grossWorldwide ? formatMoney(movie.grossWorldwide) : 'N/A');
+    $('#d-companies').text((movie.productionCompanies || []).join(', ') || 'N/A');
+
+    $('#d-links').empty();
+    (movie.externalLinks || []).forEach(link => {
+      const label = typeof link === 'string' ? link : (link.label || link.url);
+      const url = typeof link === 'string' ? link : link.url;
+      $('#d-links').append(`<a class="external-link" href="${url}" target="_blank">${label}</a>`);
+    });
+
+    if (movie.trailer) {
+      $('#d-trailer').attr('href', movie.trailer).show();
+    } else {
+      $('#d-trailer').hide();
+    }
+
+    setFavButtonState(isFavorite(movie.id));
+
+    $('#loadingSpinner').hide();
+    $('#errorState').hide();
+    $('#movieDetail').show().hide().fadeIn(400);
+  }
+
+  $('#btnFavDetail').on('click', function () {
+    if (!currentMovie) return;
+    toggleFavorite(currentMovie);
+    setFavButtonState(isFavorite(currentMovie.id));
+  });
+
+  function showLoading() {
+    $('#loadingSpinner').show();
+    $('#errorState').hide();
+    $('#movieDetail').hide();
+  }
+  function showError(msg) {
+    $('#loadingSpinner').hide();
+    $('#movieDetail').hide();
+    if (msg) $('#errorMsg').text(msg);
+    $('#errorState').show();
+  }
+
+  function loadFromJson() {
+    $.getJSON(FALLBACK_JSON)
+      .done(function (data) {
+        const movie = data.find(m => m.id === movieId);
+        if (movie) renderMovie(movie);
+        else showError('No se encontró la película solicitada.');
+      })
+      .fail(function () {
+        showError('No se pudo cargar la información de la película.');
+      });
+  }
+
+  function loadMovie() {
+    if (!movieId) {
+      showError('No se especificó ninguna película en la URL.');
+      return;
+    }
+    showLoading();
+    $.ajax({
+      url: `${API_BASE}/${encodeURIComponent(movieId)}`,
+      method: 'GET',
+      dataType: 'json',
+      timeout: 6000
+    })
+      .done(function (data) {
+        if (data && (data.id || data.primaryTitle)) {
+          renderMovie(data);
+        } else {
+          loadFromJson();
+        }
+      })
+      .fail(function () {
+        loadFromJson();
+      });
+  }
+
+  $('#btnRetry').on('click', loadMovie);
+
+  updateFavCount();
+  loadMovie();
+});
+</script>
+</body>
+</html>

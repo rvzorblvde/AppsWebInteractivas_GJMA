@@ -1,0 +1,244 @@
+:root {
+    --mr-bg: #f5f6f8;
+    --mr-navy: #12141c;
+    --mr-blue: #2563eb;
+    --mr-blue-dark: #1d4ed8;
+    --mr-gold: #f5a623;
+    --mr-red: #e11d48;
+}
+
+body {
+    background: var(--mr-bg);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.navbar-mr {
+    background: var(--mr-navy);
+}
+
+.navbar-mr .navbar-brand {
+    font-weight: 700;
+    color: #fff;
+}
+
+.navbar-mr .navbar-brand .brand-accent {
+    color: var(--mr-blue);
+}
+
+.navbar-mr .nav-link {
+    color: #cfd3dc !important;
+}
+
+.navbar-mr .nav-link:hover {
+    color: #fff !important;
+}
+
+#searchInput {
+    max-width: 240px;
+}
+
+.hero-title {
+    font-weight: 800;
+}
+
+.hero-title .accent {
+    color: var(--mr-blue);
+}
+
+.filter-btn {
+    border-radius: 999px;
+    padding: 0.4rem 1.1rem;
+    font-size: 0.9rem;
+}
+
+.movie-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.movie-card .poster-wrap {
+    position: relative;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+    background: #222;
+}
+
+.movie-card .poster-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fav-toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    color: #333;
+}
+
+.fav-toggle.is-fav {
+    color: var(--mr-red);
+}
+
+.movie-title {
+    font-weight: 700;
+    font-size: 0.98rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.movie-rating {
+    color: var(--mr-gold);
+    font-weight: 700;
+}
+
+.stars i {
+    color: var(--mr-gold);
+    font-size: 0.8rem;
+}
+
+.btn-ver-resena {
+    background: var(--mr-blue);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+}
+
+.btn-ver-resena:hover {
+    background: var(--mr-blue-dark);
+    color: #fff;
+}
+
+#favCount {
+    font-size: 0.7rem;
+}
+
+.fav-mini-card {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.fav-mini-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+#loadingSpinner,
+#errorState {
+    display: none;
+}
+
+.no-fav-icon {
+    font-size: 2.5rem;
+    color: #ccc;
+}
+
+.poster-col img {
+    width: 100%;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+}
+
+.rating-big {
+    font-size: 2.2rem;
+    font-weight: 800;
+}
+
+.stars-lg i {
+    color: var(--mr-gold);
+    font-size: 1.1rem;
+}
+
+.badge-genre {
+    background: #eef2ff;
+    color: var(--mr-blue-dark);
+    font-weight: 600;
+    border-radius: 999px;
+    padding: .4rem .9rem;
+}
+
+.badge-interest {
+    background: #f1f5f9;
+    color: #334155;
+    font-weight: 500;
+    border-radius: 999px;
+    padding: .35rem .8rem;
+    font-size: .85rem;
+}
+
+.info-label {
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #94a3b8;
+}
+
+.info-value {
+    font-weight: 600;
+}
+
+.metascore-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.meta-green {
+    background: #16a34a;
+}
+
+.meta-yellow {
+    background: #ca8a04;
+}
+
+.meta-red {
+    background: #dc2626;
+}
+
+.fav-btn-detail {
+    border-radius: 999px;
+    padding: .45rem 1.2rem;
+}
+
+.fav-btn-detail.is-fav {
+    background: var(--mr-red);
+    border-color: var(--mr-red);
+    color: #fff;
+}
+
+.detail-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, .06);
+}
+
+.external-link {
+    display: inline-block;
+    margin-right: .75rem;
+}
